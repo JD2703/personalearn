@@ -143,13 +143,15 @@ mvn test
 | --- | --- | --- |
 | `SPRING_PROFILES_ACTIVE` | `mysql` | `mysql` or `dev` (H2) |
 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | local MySQL | Database connection |
-| `JWT_SECRET` | dev placeholder | HMAC key, at least 32 characters — change this outside development |
+| `JWT_SECRET` | _(random per start)_ | HMAC key, at least 32 characters. Set it via environment variable; if unset, a random key is generated on startup |
 | `JWT_EXPIRATION_MS` | `86400000` | Token lifetime (24 h) |
 | `CORS_ALLOWED_ORIGINS` | `http://localhost:5173,http://localhost:3000` | Comma-separated frontend origins |
 | `SEED_DATA` | `true` | Seed demo users and courses on first start |
 | `ANTHROPIC_API_KEY` | _(empty)_ | Enables Claude-powered chatbot replies |
 | `AI_MODEL` | `claude-haiku-5-5` | Model used when the API key is set |
 | `VITE_API_URL` (frontend) | `/api` | API base URL for production builds |
+
+> **Secrets:** API keys and the JWT secret are read only from environment variables and are never stored in the code. Don't commit `.env` files — they're already in `.gitignore`.
 
 ## API overview
 
