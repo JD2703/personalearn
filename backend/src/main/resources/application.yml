@@ -13,6 +13,8 @@ spring:
     properties:
       hibernate:
         format_sql: false
+        # Load lazy collections (e.g. lessons of many courses) in batches instead of one query each
+        default_batch_fetch_size: 50
 
 app:
   jwt:

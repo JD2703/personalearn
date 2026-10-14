@@ -34,6 +34,7 @@ public class CourseService {
     @Transactional(readOnly = true)
     public List<CourseSummary> list(String search, String category, String level) {
         String q = search == null ? "" : search.trim().toLowerCase();
+        Map<Long, Long> counts = enrollmentCounts();
         return courses.findAll().stream()
                 .filter(c -> q.isEmpty()
                         || c.getTitle().toLowerCase().contains(q)
@@ -42,7 +43,7 @@ public class CourseService {
                 .filter(c -> category == null || category.isBlank() || c.getCategory().equalsIgnoreCase(category))
                 .filter(c -> level == null || level.isBlank() || c.getLevel().name().equalsIgnoreCase(level))
                 .sorted(Comparator.comparing(Course::getId))
-                .map(this::summary)
+                .map(c -> summary(c, counts))
                 .toList();
     }
 
@@ -154,6 +155,20 @@ public class CourseService {
 
     CourseSummary summary(Course c) {
         return CourseSummary.from(c, enrollments.countByCourseId(c.getId()));
+    }
+
+    /** Uses pre-loaded enrolment counts, avoiding one query per course. */
+    CourseSummary summary(Course c, Map<Long, Long> counts) {
+        return CourseSummary.from(c, counts.getOrDefault(c.getId(), 0L));
+    }
+
+    /** Enrolment count per course id, loaded in a single query. */
+    Map<Long, Long> enrollmentCounts() {
+        Map<Long, Long> counts = new HashMap<>();
+        for (Object[] row : enrollments.countPerCourse()) {
+            counts.put((Long) row[0], ((Number) row[1]).longValue());
+        }
+        return counts;
     }
 
     private void apply(Course c, CourseRequest req) {

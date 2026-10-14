@@ -57,16 +57,18 @@ public class RecommendationService {
         String type = user.getMbtiType();
         MbtiService.TypeProfile profile = type == null ? null : mbti.profile(type);
 
+        Map<Long, Long> counts = courseService.enrollmentCounts();
         return courses.findAll().stream()
                 .filter(c -> !enrolledIds.contains(c.getId()))
-                .map(c -> score(c, user, profile, completedLevel, interests))
+                .map(c -> score(c, user, profile, completedLevel, interests, counts))
                 .sorted(Comparator.comparingInt(Recommendation::matchPercent).reversed())
                 .limit(limit)
                 .toList();
     }
 
     private Recommendation score(Course c, User u, MbtiService.TypeProfile profile,
-                                 Map<String, Integer> completedLevel, Set<String> interests) {
+                                 Map<String, Integer> completedLevel, Set<String> interests,
+                                 Map<Long, Long> counts) {
         List<String> reasons = new ArrayList<>();
 
         // 1. Personality fit
@@ -115,7 +117,7 @@ public class RecommendationService {
         int pct = (int) Math.round(100 * (0.50 * traitScore + 0.30 * formatScore + 0.15 * levelScore + 0.05 * interestScore));
         pct = Math.max(1, Math.min(99, pct));
         if (reasons.isEmpty()) reasons.add("Broadens your skills with a new perspective");
-        return new Recommendation(courseService.summary(c), pct, reasons);
+        return new Recommendation(courseService.summary(c, counts), pct, reasons);
     }
 
     /** How strongly the learner leans toward a given letter, 0..1. */

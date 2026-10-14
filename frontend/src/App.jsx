@@ -15,6 +15,7 @@ import ChatPage from './pages/ChatPage';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
+import WakeNotice from './components/WakeNotice';
 
 function Splash() {
   return <div className="splash" aria-label="Loading"><span className="logo-mark spin"><i /><i /><i /><i /></span></div>;
@@ -49,6 +50,7 @@ export default function App() {
         <AuthProvider>
           <BrowserRouter>
             <a href="#main" className="skip">Skip to content</a>
+            <WakeNotice />
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Auth mode="login" />} />
