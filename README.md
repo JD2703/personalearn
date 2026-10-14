@@ -2,6 +2,12 @@
 
 **ReactJS · Java (Spring Boot) · JWT Authentication · MySQL**
 
+### 🔗 Live demo: [personalearn-phi.vercel.app](https://personalearn-phi.vercel.app)
+
+Log in with the demo account `demo@personalearn.com` / `demo123`, or create your own and take the personality quiz.
+
+> The backend runs on a free server that sleeps when idle, so the first request can take up to a minute to wake it.
+
 PersonaLearn is a personality-driven learning management system. Learners take an MBTI assessment, and the platform adapts course recommendations, lesson formats, study pacing and AI chatbot coaching to their personality type.
 
 ![Landing page](docs/screenshots/landing.jpg)
